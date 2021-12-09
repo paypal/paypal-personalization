@@ -2,9 +2,13 @@
 
 import { INTENT } from '@paypal/sdk-constants/src';
 
+import { fetchPersonalizations } from '../src';
 
-import { getGraphQLApiMock } from '../mocks';
-import { fetchPersonalizations } from '../../src';
+import { getGraphQLApiMock } from './mocks';
+
+
+declare var describe : function;
+declare var it : function;
 
 describe(`personalization cases`, () => {
     it('should successfully fetch a personalization payload', async () => {

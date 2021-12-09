@@ -2,14 +2,11 @@
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { request, stringifyError } from 'belter/src';
-import { CURRENCY, type FundingEligibilityType } from '@paypal/sdk-constants/src';
-import { getDomain, getActualDomain, isCurrentDomain } from 'cross-domain-utils/src';
+import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 
 import { URI } from './config';
 import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
-import { getPayPalDomain } from './global';
-
 import type { MLContext, Personalization, Extra } from './personalization';
 
 export const LocationType = {
@@ -18,18 +15,6 @@ export const LocationType = {
     'INNER':  ('inner' : 'inner')
 };
 
-type FundingEligibilityParams = {|
-    clientID : string,
-    merchantID : ?$ReadOnlyArray<string>,
-    buyerCountry : ?string,
-    currency : $Values<typeof CURRENCY>,
-    commit : boolean,
-    vault : boolean,
-    intent : string,
-    enableFunding : $ReadOnlyArray<?string>,
-    disableFunding : $ReadOnlyArray<?string>,
-    disableCard : $ReadOnlyArray<?string>
-|};
 
 function getDefaultVariables<V>() : V {
     // $FlowFixMe[incompatible-return]
@@ -57,7 +42,7 @@ export function callGraphQL<T, V>({ query, variables = getDefaultVariables(), he
         }
 
         if (status !== 200) {
-            throw new Error(`${ GRAPHQL_URI } returned status ${ status }`);
+            throw new Error(`${ URI.GRAPHQL } returned status ${ status }`);
         }
 
         return body.data;
