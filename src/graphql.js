@@ -30,7 +30,7 @@ export function callGraphQL<T, V>({ query, variables = getDefaultVariables(), he
             variables
         },
         headers: {
-            'x-app-name': 'hosted_fields',
+            'x-app-name': 'personalization',
             ...headers
         }
     }).then(({ status, body }) => {

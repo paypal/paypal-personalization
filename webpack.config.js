@@ -10,7 +10,10 @@ const MODULE_NAME = '@paypal/personalization';
 export const WEBPACK_CONFIG : WebpackConfig = getWebpackConfig({
     filename:   `${ FILE_NAME }.js`,
     modulename: MODULE_NAME,
-    minify:     false
+    minify:     false,
+    vars:       {
+        __PAYPAL_DOMAIN__: `https://www.paypal.com`
+    }
 });
 
 export const WEBPACK_CONFIG_MIN : WebpackConfig = getWebpackConfig({
@@ -18,13 +21,17 @@ export const WEBPACK_CONFIG_MIN : WebpackConfig = getWebpackConfig({
     modulename: MODULE_NAME,
     minify:     true,
     vars:       {
-        __MIN__: true
+        __MIN__:           true,
+        __PAYPAL_DOMAIN__: `https://www.paypal.com`
     }
 });
 
 export const WEBPACK_CONFIG_TEST : WebpackConfig = getWebpackConfig({
     modulename: MODULE_NAME,
-    test:       true
+    test:       true,
+    vars:       {
+        __PAYPAL_DOMAIN__: `mock://www.paypal.com`
+    }
 });
 
 export default [ WEBPACK_CONFIG, WEBPACK_CONFIG_MIN ];

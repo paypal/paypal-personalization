@@ -1,5 +1,5 @@
 /* @flow */
 
-export const script = () => {
-    return true;
+export const script : () => string = () => {
+    return '';
 };
