@@ -1,0 +1,49 @@
+{
+  "name": "@paypal/personalization",
+  "version": "1.0.0",
+  "description": "Personalization definitions and eligibility",
+  "main": "index.js",
+  "scripts": {
+    "babel": "babel ./server --ignore=node_modules --out-dir ./server",
+    "build": "npm run test && npm run doc",
+    "clean": "rimraf dist coverage",
+    "debug": "cross-env NODE_ENV=debug",
+    "doc": "esdoc",
+    "flow": "flow",
+    "flow-typed": "rm -rf ./flow-typed && flow-typed install",
+    "karma": "cross-env NODE_ENV=test babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/karma start",
+    "lint": "eslint src/ server/ test/ *.js",
+    "reinstall": "rimraf flow-typed && rimraf node_modules && npm install && flow-typed install",
+    "release": "./publish.sh",
+    "release:major": "./publish.sh major",
+    "release:minor": "./publish.sh minor",
+    "release:patch": "./publish.sh patch",
+    "setup": "npm install && npm run flow-typed",
+    "test": "npm run lint && npm run flow-typed && npm run flow && npm run jest && npm run karma",
+    "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
+    "jest": "jest test/server --env=node --no-cache --collectCoverageFrom='server/' --coverage --verbose --runInBand --silent=false",
+    "prepublishOnly": "npm run babel",
+    "postpublish": "rm -rf ./server && git checkout ./server"
+  },
+  "keywords": [
+    "personalization"
+  ],
+  "author": "Steve Mask",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@paypal/sdk-constants": "^1.0.113",
+    "beaver-logger": "^4.0.32",
+    "belter": "^1.0.177",
+    "cross-domain-utils": "^2.0.38",
+    "zalgo-promise": "^1.0.48"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "esdoc": "^1.1.0",
+    "esdoc-flow-type-plugin": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "flow-bin": "0.155.0",
+    "grumbler-scripts": "^5.0.1",
+    "mocha": "^9.1.3"
+  }
+}
