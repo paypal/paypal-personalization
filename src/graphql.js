@@ -7,7 +7,7 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { URI } from './config';
 import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
-import type { MLContext, Personalization, Extra } from './personalization';
+import type { MLContext, Personalization, Extra } from './types';
 
 export const LocationType = {
     'BEFORE': ('before' : 'before'),
