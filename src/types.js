@@ -5,8 +5,9 @@ import { COMMIT, COUNTRY, CURRENCY, INTENT, type LocaleType } from '@paypal/sdk-
 import { LocationType } from './graphql';
 
 type Tracking = {|
-    click : string,
-    impression : string
+    context : string,
+    action : string,
+    metric : string
 |};
 
 type Treatment = {|
