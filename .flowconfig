@@ -1,26 +1,17 @@
 [ignore]
 .*/node_modules/babel-plugin-flow-runtime
 .*/node_modules/flow-runtime
+.*/node_modules/cross-domain-safe-weakmap/dist
+.*/node_modules/cross-domain-safe-weakmap/test
+.*/node_modules/cross-domain-utils/dist
+.*/node_modules/cross-domain-utils/test
 .*/node_modules/npm
-.*/node_modules/eslint-plugin-compat
 .*/node_modules/jsonlint
-.*/node_modules/flowgen
 .*/dist/module
 [include]
 [libs]
 flow-typed
-node_modules/grumbler-scripts/declarations.js
-node_modules/post-robot/src/declarations.js
 src/declarations.js
-test/declarations.js
+node_modules/grumbler-scripts/declarations.js
 [options]
-module.file_ext=.js
-module.file_ext=.json
-module.file_ext=.jsx
-module.file_ext=.css
-module.file_ext=.scss
 module.name_mapper='^src\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
-module.name_mapper='.*\(.scss\)' -> 'CSSModule'
-experimental.const_params=false
-[lints]
-deprecated-utility=off

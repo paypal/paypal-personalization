@@ -22,8 +22,9 @@ function getDefaultVariables<V>() : V {
 }
 
 export function callGraphQL<T, V>({ query, variables = getDefaultVariables(), headers = {} } : {| query : string, variables : V, headers? : { [string] : string } |}) : ZalgoPromise<T> {
+    const url = buildPayPalUrl(URI.GRAPHQL);
     return request({
-        url:     buildPayPalUrl(URI.GRAPHQL),
+        url,
         method:  'POST',
         json:    {
             query,
@@ -42,7 +43,7 @@ export function callGraphQL<T, V>({ query, variables = getDefaultVariables(), he
         }
 
         if (status !== 200) {
-            throw new Error(`${ URI.GRAPHQL } returned status ${ status }`);
+            throw new Error(`${ url } returned status ${ status }`);
         }
 
         return body.data;

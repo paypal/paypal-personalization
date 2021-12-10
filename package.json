@@ -1,7 +1,7 @@
 {
   "name": "@paypal/personalization",
   "version": "1.0.0",
-  "description": "Personalization definitions and eligibility",
+  "description": "PayPal Personalization",
   "main": "index.js",
   "scripts": {
     "babel": "babel ./server --ignore=node_modules --out-dir ./server",
@@ -21,7 +21,6 @@
     "setup": "npm install && npm run flow-typed",
     "test": "npm run lint && npm run flow-typed && npm run flow && npm run karma",
     "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
-    "jest": "jest test/server --env=node --no-cache --collectCoverageFrom='server/' --coverage --verbose --runInBand --silent=false",
     "prepublishOnly": "npm run babel",
     "postpublish": "rm -rf ./server && git checkout ./server"
   },
@@ -33,19 +32,19 @@
   "dependencies": {
     "@paypal/sdk-constants": "^1.0.113",
     "beaver-logger": "^4.0.32",
-    "belter": "^1.0.177",
+    "belter": "^1.0.146",
+    "bowser": "^2.0.0",
     "cross-domain-utils": "^2.0.38",
     "zalgo-promise": "^1.0.48"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "cheerio": "^1.0.0-rc.10",
-    "esdoc": "^1.1.0",
-    "esdoc-flow-type-plugin": "^1.1.0",
-    "esdoc-standard-plugin": "^1.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "esdoc": "1.1.0",
+    "esdoc-flow-type-plugin": "1.1.0",
+    "esdoc-standard-plugin": "1.0.0",
     "flow-bin": "0.155.0",
-    "grumbler-scripts": "^5.0.1",
-    "mocha": "^9.1.3",
-    "sync-browser-mocks": "^2.0.8"
+    "grumbler-scripts": "^5.0.0",
+    "mocha": "4.1.0",
+    "sync-browser-mocks": "2.0.8"
   }
 }

@@ -49,5 +49,3 @@ export function getGraphQLApiMock(options : Object = {}) : MockEndpoint {
         ...options
     });
 }
-
-getGraphQLApiMock().listen();

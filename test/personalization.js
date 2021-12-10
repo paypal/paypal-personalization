@@ -1,18 +1,23 @@
 /* @flow */
 
 import { INTENT } from '@paypal/sdk-constants/src';
+import { patchXmlHttpRequest } from 'sync-browser-mocks/dist/sync-browser-mocks';
 
 import { fetchPersonalizations } from '../src';
 
 import { getGraphQLApiMock } from './mocks';
 
-
 declare var describe : function;
 declare var it : function;
 
 describe(`personalization cases`, () => {
+    beforeEach(() => {
+        patchXmlHttpRequest();
+    });
+
     it('should successfully fetch a personalization payload', async () => {
-        const graphQLMock = getGraphQLApiMock();
+        const graphQLMock = getGraphQLApiMock().listen();
+        graphQLMock.expectCalls();
 
         const mlContext = {
             userAgent:    window.navigator.userAgent,
