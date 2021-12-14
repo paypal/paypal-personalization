@@ -110,69 +110,76 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
-function getHTMLForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+function getHTMLForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
     return ZalgoPromise.try(() => {
         // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ personalization.name }`)
+        return import(`./experiments/${ name }`)
             .then(({ html }) => {
                 return html;
             })
             .catch(() => {
-                throw new Error(`Invalid experiment ${ personalization.name }`);
+                throw new Error(`Invalid experiment ${ name }`);
             });
     });
 }
 
-function getStyleForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+function getStyleForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
     return ZalgoPromise.try(() => {
         // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ personalization.name }`)
+        return import(`./experiments/${ name }`)
             .then(({ style }) => {
                 return style;
             })
             .catch(() => {
-                throw new Error(`Invalid experiment ${ personalization.name }`);
+                throw new Error(`Invalid experiment ${ v }`);
             });
     });
 }
 
-function getScriptForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+function getScriptForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
     return ZalgoPromise.try(() => {
         // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ personalization.name }`)
+        return import(`./experiments/${ name }`)
             .then(({ script }) => {
                 return script;
             })
             .catch(() => {
-                throw new Error(`Invalid experiment ${ personalization.name }`);
+                throw new Error(`Invalid experiment ${ name }`);
             });
     });
 }
 
-function adaptPersonalizationToExperiments(personalization) : ?ZalgoPromise<$ReadOnlyArray<Personalization>> {
-    const personalizations = [];
-
+function populatePersonalization({ name, personalizations } : {| name : string, personalizations : {| text : string, tracking : {| impression : string, click : string |} |} |}) : ZalgoPromise<Personalization> {
     return ZalgoPromise.hash({
-        html: getHTMLForPersonalization({ personalization }),
-        css:  getStyleForPersonalization({ personalization }),
-        js:   getScriptForPersonalization({ personalization })
+        html: getHTMLForPersonalization({ name }),
+        css:  getStyleForPersonalization({ name }),
+        js:   getScriptForPersonalization({ name })
     }).then(({ html, css, js }) => {
-        Object.keys(personalization).forEach(experiment => {
-            if (personalization[experiment]) {
-                personalizations.push({
-                    name:      experiment,
-                    tracking:  personalization[experiment] && personalization[experiment].tracking,
-                    treatment: {
-                        name:   experiment,
-                        html,
-                        css,
-                        js
-                    }
-                });
+        return {
+            name,
+            tracking:  personalizations[name] && personalizations[name].tracking,
+            treatment: {
+                name,
+                html,
+                css,
+                js
+            }
+        };
+    });
+}
+
+function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
+    return ZalgoPromise.try(() => {
+        const adaptedPersonalizations = [];
+
+        Object.keys(personalizations).forEach((name) => {
+            if (personalizations[name]) {
+                const personalization = populatePersonalization({ name, personalizations });
+                adaptedPersonalizations.push(personalization);
             }
         });
 
-        return personalizations;
+        return ZalgoPromise.all(adaptedPersonalizations).then(results => results);
     });
 }
 
@@ -214,7 +221,8 @@ export function getPersonalizations({ mlContext, eligibility, extra } : {| mlCon
         if (!gqlResult || !gqlResult.checkoutCustomization) {
             throw new Error(`GraphQL checkoutCustomization returned no checkoutCustomization object`);
         }
-        return adaptPersonalizationToExperiments(gqlResult && gqlResult.checkoutCustomization);
+        return adaptPersonalizationToExperiments(gqlResult && gqlResult.checkoutCustomization)
+            .then(personalizations => personalizations);
     }).catch(err => {
         getLogger().error(`graphql_checkoutCustomization_error`, { err: stringifyError(err) });
         return ZalgoPromise.reject(err);

@@ -48,7 +48,7 @@ describe(`personalization cases`, () => {
 
         const props = {
             style:    {
-                tagline: 'Press Me'
+                tagline: true
             }
         };
         await fetchPersonalizations({ mlContext, eligibility: {}, extra, props })
