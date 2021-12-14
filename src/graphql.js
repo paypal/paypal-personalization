@@ -131,7 +131,7 @@ function getStyleForPersonalization({ name } : {| name : string |}) : ZalgoPromi
                 return style;
             })
             .catch(() => {
-                throw new Error(`Invalid experiment ${ v }`);
+                throw new Error(`Invalid experiment ${ name }`);
             });
     });
 }
