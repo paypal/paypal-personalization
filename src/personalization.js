@@ -2,10 +2,9 @@
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
-import type { ButtonProps } from '@paypal/checkout-components/src/ui/buttons/props';
 
 import { getPersonalizations } from './graphql';
-import type { Extra, MLContext, Personalization } from './types';
+import type { ButtonProps, Extra, MLContext, Personalization } from './types';
 
 const eligiblePersonalizations = ({ personalizations, props }) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {

@@ -51,3 +51,7 @@ export type Extra = {|
     layout? : string,
     buttonSize? : string
 |};
+
+export type ButtonProps = {|
+    style : Object
+|};

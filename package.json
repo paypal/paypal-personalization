@@ -30,7 +30,6 @@
   "author": "Steve Mask",
   "license": "Apache-2.0",
   "dependencies": {
-    "@paypal/checkout-components": "^5.0.189",
     "@paypal/sdk-constants": "^1.0.113",
     "beaver-logger": "^4.0.32",
     "belter": "^1.0.146",

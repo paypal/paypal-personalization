@@ -47,7 +47,7 @@ describe(`personalization cases`, () => {
         };
 
         const props = {
-            style: {
+            style:    {
                 tagline: 'Press Me'
             }
         };
