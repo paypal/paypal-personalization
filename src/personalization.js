@@ -9,7 +9,7 @@ import type { ButtonProps, Extra, MLContext, Personalization } from './types';
 const eligiblePersonalizations = ({ personalizations, props }) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
         // $FlowIssue[unsupported-syntax]
-        return import('./experiments/tagline')
+        return import(`./experiments/${ personalization.name }`)
             .then(({ eligible }) => {
                 return eligible({ props });
             })
