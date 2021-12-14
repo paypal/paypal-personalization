@@ -1,7 +1,7 @@
 /* @flow */
 
-import type { ButtonProps } from '@paypal/checkout-components/src';
+import type { ButtonProps } from '@paypal/checkout-components/src/ui/buttons/props';
 
 export const eligibile = ({ props = {} } : {| props : ButtonProps |}) : boolean => {
-    return props.style?.tagline?.length ? true : false;
+    return props.style?.tagline;
 };
