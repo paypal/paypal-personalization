@@ -7,7 +7,7 @@ import type { ButtonProps } from '@paypal/checkout-components/src/ui/buttons/pro
 import { getPersonalizations } from './graphql';
 import type { Extra, MLContext, Personalization } from './types';
 
-const filteredPersonalizations = ({ personalizations, props }) : $ReadOnlyArray<Personalization> => {
+const eligiblePersonalizations = ({ personalizations, props }) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
         // $FlowIssue[unsupported-syntax]
         return import('./experiments/tagline')
@@ -23,6 +23,6 @@ const filteredPersonalizations = ({ personalizations, props }) : $ReadOnlyArray<
 export function fetchPersonalizations({ mlContext, eligibility, extra, props } : {| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra, props : ButtonProps |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
     return getPersonalizations({ mlContext, eligibility, extra })
         .then(personalizations => {
-            return filteredPersonalizations({ personalizations, props });
+            return eligiblePersonalizations({ personalizations, props });
         });
 }
