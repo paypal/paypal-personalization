@@ -45,7 +45,6 @@ describe(`personalization cases`, () => {
             layout:          'horizontal',
             buttonSize:      ''
         };
-<<<<<<< HEAD
 
         const props = {
             style:    {
@@ -53,9 +52,6 @@ describe(`personalization cases`, () => {
             }
         };
         await fetchPersonalizations({ mlContext, eligibility: {}, extra, props })
-=======
-        await fetchPersonalizations({ mlContext, eligibility: {}, extra })
->>>>>>> 84413c407ee80202bee6f21c08ad6c0263c62c8c
             .then(experiments => {
                 let found = false;
                 experiments.forEach(experiment => {
