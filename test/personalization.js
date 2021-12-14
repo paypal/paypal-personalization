@@ -44,7 +44,13 @@ describe(`personalization cases`, () => {
             layout:          'horizontal',
             buttonSize:      ''
         };
-        await fetchPersonalizations({ mlContext, eligibility: {}, extra })
+
+        const props = {
+            style: {
+                tagline: 'Press Me'
+            }
+        };
+        await fetchPersonalizations({ mlContext, eligibility: {}, extra, props })
             .then(experiments => {
                 let found = false;
                 experiments.forEach(experiment => {
