@@ -4,7 +4,7 @@ import { COMMIT, COUNTRY, CURRENCY, INTENT, type LocaleType } from '@paypal/sdk-
 
 type Tracking = {|
     context : string,
-    action : string,
+    treatment : string,
     metric : string
 |};
 
