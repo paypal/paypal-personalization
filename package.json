@@ -1,6 +1,6 @@
 {
   "name": "@paypal/personalization",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "PayPal Personalization",
   "main": "index.js",
   "scripts": {
