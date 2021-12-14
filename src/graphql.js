@@ -9,13 +9,6 @@ import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
 import type { MLContext, Personalization, Extra } from './types';
 
-export const LocationType = {
-    'BEFORE': ('before' : 'before'),
-    'AFTER':  ('after' : 'after'),
-    'INNER':  ('inner' : 'inner')
-};
-
-
 function getDefaultVariables<V>() : V {
     // $FlowFixMe[incompatible-return]
     return {};
