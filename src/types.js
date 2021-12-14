@@ -2,8 +2,6 @@
 
 import { COMMIT, COUNTRY, CURRENCY, INTENT, type LocaleType } from '@paypal/sdk-constants/src';
 
-import { LocationType } from './graphql';
-
 type Tracking = {|
     context : string,
     action : string,
@@ -12,11 +10,7 @@ type Tracking = {|
 
 type Treatment = {|
     name : string,
-    html : {|
-        markup : string,
-        selector : string,
-        location : $Values<typeof LocationType>
-    |},
+    html : string,
     css : string,
     js : string
 |};
