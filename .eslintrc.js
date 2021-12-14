@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line import/no-commonjs
 module.exports = {
-    'extends': './node_modules/grumbler-scripts/config/.eslintrc-browser.js',
+    'extends': require.resolve('grumbler-scripts/config/.eslintrc-browser'),
     'globals': {
         __PAYPAL_DOMAIN__: true
     }

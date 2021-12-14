@@ -117,29 +117,70 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
-function adaptPersonalizationToExperiments(personalization) : ?$ReadOnlyArray<Personalization> {
+function getHTMLForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+    return ZalgoPromise.try(() => {
+        // $FlowIssue[unsupported-syntax]
+        return import(`./experiments/${ personalization.name }`)
+            .then(({ html }) => {
+                return html;
+            })
+            .catch(() => {
+                throw new Error(`Invalid experiment ${ personalization.name }`);
+            });
+    });
+}
+
+function getStyleForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+    return ZalgoPromise.try(() => {
+        // $FlowIssue[unsupported-syntax]
+        return import(`./experiments/${ personalization.name }`)
+            .then(({ style }) => {
+                return style;
+            })
+            .catch(() => {
+                throw new Error(`Invalid experiment ${ personalization.name }`);
+            });
+    });
+}
+
+function getScriptForPersonalization({ personalization } : {| personalization : Personalization |}) : ZalgoPromise<string> {
+    return ZalgoPromise.try(() => {
+        // $FlowIssue[unsupported-syntax]
+        return import(`./experiments/${ personalization.name }`)
+            .then(({ script }) => {
+                return script;
+            })
+            .catch(() => {
+                throw new Error(`Invalid experiment ${ personalization.name }`);
+            });
+    });
+}
+
+function adaptPersonalizationToExperiments(personalization) : ?ZalgoPromise<$ReadOnlyArray<Personalization>> {
     const personalizations = [];
 
-    Object.keys(personalization).forEach(experiment => {
-        if (personalization[experiment]) {
-            personalizations.push({
-                name:      experiment,
-                tracking:  personalization[experiment] && personalization[experiment].tracking,
-                treatment: {
-                    name:   experiment,
-                    html: {
-                        markup:   '', // pull from personalization repo
-                        selector: '', // pull from personalization repo
-                        location: LocationType.INNER // pull from personalization repo
-                    },
-                    css: '',
-                    js:  ''
-                }
-            });
-        }
-    });
+    return ZalgoPromise.hash({
+        html: getHTMLForPersonalization({ personalization }),
+        css:  getStyleForPersonalization({ personalization }),
+        js:   getScriptForPersonalization({ personalization })
+    }).then(({ html, css, js }) => {
+        Object.keys(personalization).forEach(experiment => {
+            if (personalization[experiment]) {
+                personalizations.push({
+                    name:      experiment,
+                    tracking:  personalization[experiment] && personalization[experiment].tracking,
+                    treatment: {
+                        name:   experiment,
+                        html,
+                        css,
+                        js
+                    }
+                });
+            }
+        });
 
-    return personalizations;
+        return personalizations;
+    });
 }
 
 export function getPersonalizations({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility? : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
