@@ -21,8 +21,7 @@
     "setup": "npm install && npm run flow-typed",
     "test": "npm run lint && npm run flow-typed && npm run flow && npm run karma",
     "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
-    "prepublishOnly": "npm run babel",
-    "postpublish": "rm -rf dist/module && git checkout dist/module"
+    "prepublishOnly": "npm run babel"
   },
   "keywords": [
     "personalization"
