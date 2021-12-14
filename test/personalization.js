@@ -7,10 +7,7 @@ import { fetchPersonalizations } from '../src';
 
 import { getGraphQLApiMock } from './mocks';
 
-<<<<<<< HEAD
 declare var beforeEach : function;
-=======
->>>>>>> 84413c407ee80202bee6f21c08ad6c0263c62c8c
 declare var describe : function;
 declare var it : function;
 
