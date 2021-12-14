@@ -6,7 +6,7 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { getPersonalizations } from './graphql';
 import type { ButtonProps, Extra, MLContext, Personalization } from './types';
 
-const eligiblePersonalizations = ({ personalizations, props }) : $ReadOnlyArray<Personalization> => {
+export const eligiblePersonalizations = ({ personalizations, props } : {| personalizations : $ReadOnlyArray<Personalization>, props : ButtonProps |}) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
         // $FlowIssue[unsupported-syntax]
         return import(`./experiments/${ personalization.name }`)
@@ -19,9 +19,7 @@ const eligiblePersonalizations = ({ personalizations, props }) : $ReadOnlyArray<
     });
 };
 
-export function fetchPersonalizations({ mlContext, eligibility, extra, props } : {| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra, props : ButtonProps |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
+export const fetchPersonalizations = ({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> => {
     return getPersonalizations({ mlContext, eligibility, extra })
-        .then(personalizations => {
-            return eligiblePersonalizations({ personalizations, props });
-        });
-}
+        .then(personalizations => personalizations);
+};
