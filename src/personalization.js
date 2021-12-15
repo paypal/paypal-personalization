@@ -6,7 +6,7 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { getPersonalizations } from './graphql';
 import type { ButtonProps, Extra, MLContext, Personalization } from './types';
 
-export const eligiblePersonalizations = ({ personalizations, props } : {| personalizations : $ReadOnlyArray<Personalization>, props : ButtonProps |}) : $ReadOnlyArray<Personalization> => {
+export const eligiblePersonalizations = ({ personalizations = [], props } : {| personalizations : $ReadOnlyArray<Personalization>, props : ButtonProps |}) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
         // $FlowIssue[unsupported-syntax]
         return import(`./experiments/${ personalization.name }`)
