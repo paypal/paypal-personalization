@@ -1,3 +1,3 @@
 /* @flow */
 
-export * from './tagline';
+export * as tagline from './tagline';

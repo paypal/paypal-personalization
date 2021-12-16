@@ -8,6 +8,8 @@ import { URI } from './config';
 import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
 import type { MLContext, Personalization, Extra } from './types';
+// eslint-disable-next-line import/no-namespace
+import * as experiments from './experiments';
 
 function getDefaultVariables<V>() : V {
     // $FlowFixMe[incompatible-return]
@@ -110,62 +112,36 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
-function getHTMLForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
-    return ZalgoPromise.try(() => {
-        // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ name }`)
-            .then(({ html }) => {
-                return html;
-            })
-            .catch(() => {
-                throw new Error(`Invalid experiment ${ name }`);
-            });
-    });
+function getHTMLForPersonalization({ name } : {| name : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return experiments[name].html;
 }
 
-function getStyleForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
-    return ZalgoPromise.try(() => {
-        // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ name }`)
-            .then(({ style }) => {
-                return style;
-            })
-            .catch(() => {
-                throw new Error(`Invalid experiment ${ name }`);
-            });
-    });
+function getStyleForPersonalization({ name } : {| name : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return experiments[name].style;
 }
 
-function getScriptForPersonalization({ name } : {| name : string |}) : ZalgoPromise<string> {
-    return ZalgoPromise.try(() => {
-        // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ name }`)
-            .then(({ script }) => {
-                return script;
-            })
-            .catch(() => {
-                throw new Error(`Invalid experiment ${ name }`);
-            });
-    });
+function getScriptForPersonalization({ name } : {| name : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return experiments[name].script;
 }
 
-function populatePersonalization({ name, personalizations } : {| name : string, personalizations : {| text : string, tracking : {| impression : string, click : string |} |} |}) : ZalgoPromise<Personalization> {
-    return ZalgoPromise.hash({
-        html: getHTMLForPersonalization({ name }),
-        css:  getStyleForPersonalization({ name }),
-        js:   getScriptForPersonalization({ name })
-    }).then(({ html, css, js }) => {
-        return {
+function populatePersonalization({ name, personalizations } : {| name : string, personalizations : {| text : string, tracking : {| impression : string, click : string |} |} |}) : Personalization {
+    const html = getHTMLForPersonalization({ name });
+    const css = getStyleForPersonalization({ name });
+    const js = getScriptForPersonalization({ name });
+
+    return {
+        name,
+        tracking:  personalizations[name] && personalizations[name].tracking,
+        treatment: {
             name,
-            tracking:  personalizations[name] && personalizations[name].tracking,
-            treatment: {
-                name,
-                html,
-                css,
-                js
-            }
-        };
-    });
+            html,
+            css,
+            js
+        }
+    };
 }
 
 function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
@@ -184,42 +160,28 @@ function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$Rea
 }
 
 export function getPersonalizations({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility? : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
-    const { userAgent, buyerCountry, locale, clientId, buyerIp: ip, currency, cookies } = mlContext;
-    const { commit, intent, vault, buttonSessionID, renderedButtons, label, period, taglineEnabled, layout, buttonSize } = extra;
+    const { userAgent, buyerCountry, locale, clientId, currency, cookies } = mlContext;
+    const { buttonSessionID, renderedButtons, taglineEnabled, buttonSize } = extra;
     const variables = {
         clientId,
         locale,
+        cookies,
         buyerCountry,
         currency,
-        intent,
-        commit,
-        vault,
-        ip,
-        cookies,
         userAgent,
         buttonSessionID,
         renderedButtons,
-        label,
-        period,
         taglineEnabled,
-        layout,
         buttonSize,
         eligibility
     };
-
-    // Placeholder for future API changes
-    if (eligibility) {
-        variables.eligibility = eligibility;
-    } else {
-        delete variables.eligibility;
-    }
 
     return callGraphQL({
         query: PERSONALIZATION_QUERY,
         variables
     }).then((gqlResult) => {
         if (!gqlResult || !gqlResult.checkoutCustomization) {
-            throw new Error(`GraphQL checkoutCustomization returned no checkoutCustomization object`);
+            return [];
         }
         return adaptPersonalizationToExperiments(gqlResult && gqlResult.checkoutCustomization)
             .then(personalizations => personalizations);

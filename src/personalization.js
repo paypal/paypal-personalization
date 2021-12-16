@@ -5,17 +5,13 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 
 import { getPersonalizations } from './graphql';
 import type { ButtonProps, Extra, MLContext, Personalization } from './types';
+// eslint-disable-next-line import/no-namespace
+import * as experiments from './experiments';
 
 export const eligiblePersonalizations = ({ personalizations = [], props } : {| personalizations : $ReadOnlyArray<Personalization>, props : ButtonProps |}) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
-        // $FlowIssue[unsupported-syntax]
-        return import(`./experiments/${ personalization.name }`)
-            .then(({ eligible }) => {
-                return eligible({ props });
-            })
-            .catch(() => {
-                throw new Error(`Invalid experiment ${ personalization.name }`);
-            });
+        // eslint-disable-next-line import/namespace
+        return experiments[personalization.name].eligible({ props });
     });
 };
 
