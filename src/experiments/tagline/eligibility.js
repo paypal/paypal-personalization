@@ -3,5 +3,6 @@
 import type { ButtonProps } from '../../types';
 
 export const eligible = ({ props = {} } : {| props : ButtonProps |}) : boolean => {
-    return props.style?.tagline;
+    const taglineElement = document.querySelector('.paypal-button-tagline');
+    return props.style?.tagline && Boolean(taglineElement);
 };

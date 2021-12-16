@@ -112,29 +112,33 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
-function getHTMLForPersonalization({ name } : {| name : string |}) : string {
+function getHTMLForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
     // eslint-disable-next-line import/namespace
-    return experiments[name].html;
+    return experiments[name].html({ personalization });
 }
 
-function getStyleForPersonalization({ name } : {| name : string |}) : string {
+function getStyleForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
     // eslint-disable-next-line import/namespace
-    return experiments[name].style;
+    return experiments[name].style({ personalization });
 }
 
-function getScriptForPersonalization({ name } : {| name : string |}) : string {
+function getScriptForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
     // eslint-disable-next-line import/namespace
-    return experiments[name].script;
+    return experiments[name].script({ personalization });
 }
 
-function populatePersonalization({ name, personalizations } : {| name : string, personalizations : {| text : string, tracking : {| impression : string, click : string |} |} |}) : Personalization {
-    const html = getHTMLForPersonalization({ name });
-    const css = getStyleForPersonalization({ name });
-    const js = getScriptForPersonalization({ name });
+function populatePersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : Personalization {
+    const html = getHTMLForPersonalization({ name, personalization });
+    const css = getStyleForPersonalization({ name, personalization });
+    const js = getScriptForPersonalization({ name, personalization });
 
     return {
         name,
-        tracking:  personalizations[name] && personalizations[name].tracking,
+        tracking:  {
+            context:   '',
+            treatment: '',
+            metric:    ''
+        },
         treatment: {
             name,
             html,
@@ -150,7 +154,7 @@ function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$Rea
 
         Object.keys(personalizations).forEach((name) => {
             if (personalizations[name]) {
-                const personalization = populatePersonalization({ name, personalizations });
+                const personalization = populatePersonalization({ name, personalization: personalizations[name] });
                 adaptedPersonalizations.push(personalization);
             }
         });
