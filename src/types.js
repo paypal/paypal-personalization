@@ -47,5 +47,7 @@ export type Extra = {|
 |};
 
 export type ButtonProps = {|
-    style : Object
+    style : {|
+        tagline : boolean
+    |}
 |};
