@@ -1,7 +1,6 @@
 /* @flow */
 
 import { ZalgoPromise } from 'zalgo-promise/src';
-import { memoize } from 'belter/src';
 import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 
 import { getPersonalizations } from './graphql';
@@ -16,7 +15,7 @@ export const eligiblePersonalizations = ({ personalizations = [], props } : {| p
     });
 };
 
-export const fetchPersonalizations : ({| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra |}) => ZalgoPromise<$ReadOnlyArray<Personalization>> = memoize(({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> => {
+export const fetchPersonalizations = ({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> => {
     return getPersonalizations({ mlContext, eligibility, extra })
         .then(personalizations => personalizations);
-});
+};
