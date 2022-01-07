@@ -164,13 +164,14 @@ function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$Rea
 }
 
 export function getPersonalizations({ mlContext, eligibility, extra } : {| mlContext : MLContext, eligibility? : FundingEligibilityType, extra : Extra |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
-    const { userAgent, buyerCountry, locale, clientId, currency, cookies } = mlContext;
+    const { userAgent, buyerCountry, buyerIp, locale, clientId, currency, cookies } = mlContext;
     const { buttonSessionID, renderedButtons, taglineEnabled, buttonSize } = extra;
     const variables = {
         clientId,
         locale,
         cookies,
         buyerCountry,
+        buyerIp,
         currency,
         userAgent,
         buttonSessionID,
