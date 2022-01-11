@@ -22,6 +22,5 @@ export const CLIENT_ID_ALIAS = {
 };
 
 export const URI = {
-    GRAPHQL: '/graphql',
     LOGGER:  '/xoplatform/logger/api/logger'
 };
