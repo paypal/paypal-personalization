@@ -34,6 +34,7 @@
     "belter": "^1.0.146",
     "bowser": "^2.0.0",
     "cross-domain-utils": "^2.0.38",
+    "jsx-pragmatic": "^2.0.22",
     "zalgo-promise": "^1.0.48"
   },
   "devDependencies": {
