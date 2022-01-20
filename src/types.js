@@ -2,13 +2,13 @@
 
 import { COMMIT, COUNTRY, CURRENCY, INTENT, type LocaleType } from '@paypal/sdk-constants/src';
 
-type Tracking = {|
+export type Tracking = {|
     context : string,
     treatment : string,
     metric : string
 |};
 
-type Treatment = {|
+export type Treatment = {|
     name : string,
     html : string,
     css : string,
@@ -44,6 +44,16 @@ export type Extra = {|
     renderedButtons? : $ReadOnlyArray<string>,
     layout? : string,
     buttonSize? : string
+|};
+
+export type UserContext = {|
+
+|};
+
+export type Treatments = {|
+    string : {|
+        string : number
+    |}
 |};
 
 export type ButtonProps = {|

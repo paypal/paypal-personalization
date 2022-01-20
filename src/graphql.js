@@ -7,10 +7,11 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { URI } from './config';
 import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
-import type { MLContext, Personalization, Extra } from './types';
+import type { MLContext, Personalization, Extra, Tracking, Treatments, UserContext } from './types';
 // eslint-disable-next-line import/no-namespace
 import * as experiments from './experiments';
 import { TrackingBeacon, TrackingStyle } from './components';
+import { decideTreatment, determineSegmentTreatments } from './util';
 
 function getDefaultVariables<V>() : V {
     // $FlowFixMe[incompatible-return]
@@ -113,6 +114,21 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
+function getHTML({ name, tracking, treatment } : {| name : string, tracking : Tracking, treatment : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return TrackingBeacon({ url: tracking.treatment }) + (experiments[name]?.treatments?.[treatment]?.html() || '');
+}
+
+function getStyle({ name, treatment } : {| name : string, treatment : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return TrackingStyle() + (experiments[name]?.treatments?.[treatment]?.style() || '');
+}
+
+function getScript({ name, treatment } : {| name : string, treatment : string |}) : string {
+    // eslint-disable-next-line import/namespace
+    return experiments[name]?.treatments?.[treatment]?.script() || '';
+}
+
 function getHTMLForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
     let trackingBeacon = '';
     if (personalization?.tracking?.impression) {
@@ -136,6 +152,27 @@ function getScriptForPersonalization({ name, personalization } : {| name : strin
     return experiments[name]?.script({ personalization }) || '';
 }
 
+function populateClientPersonalization({ name, tracking, treatment } : {| name : string, tracking : Tracking, treatment : string |}) : Personalization {
+    const html = getHTML({ name, tracking, treatment });
+    const css = getStyle({ name, treatment });
+    const js = getScript({ name, treatment });
+
+    return {
+        name,
+        tracking:  {
+            context:   '',
+            treatment: '',
+            metric:    ''
+        },
+        treatment: {
+            name,
+            html,
+            css,
+            js
+        }
+    };
+}
+
 function populatePersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : Personalization {
     const html = getHTMLForPersonalization({ name, personalization });
     const css = getStyleForPersonalization({ name, personalization });
@@ -157,12 +194,49 @@ function populatePersonalization({ name, personalization } : {| name : string, p
     };
 }
 
+export function adaptClientPersonalizationToExperiments({ context, personalizations } : {| context : UserContext, personalizations : Object |}) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
+    const adaptedPersonalizations = [];
+
+    for (const experiment in personalizations) {
+        if (personalizations.hasOwnProperty(experiment)) {
+            // eslint-disable-next-line import/namespace
+            if (!experiments[experiment]) {
+                continue;
+            }
+
+            const tracking : Tracking = personalizations[experiment]?.tracking;
+            const treatments : Treatments = personalizations[experiment]?.treatments;
+
+            for (const expression in treatments) {
+                if (treatments.hasOwnProperty(expression)) {
+                    const treatment = treatments[expression];
+
+                    const segmentTreatments = determineSegmentTreatments({ context, expression });
+                    if (segmentTreatments) {
+                        const sample = Object.keys(treatment);
+                        const probs = Object.keys(treatment).map(key => treatment[key]);
+
+                        const decision = decideTreatment({ sample, probs });
+                        const personalization = populateClientPersonalization({ name: experiment, tracking, treatment: decision });
+                        adaptedPersonalizations.push(personalization);
+                        break;
+                    }
+                    
+                }
+            }
+        }
+    }
+
+    return ZalgoPromise.all(adaptedPersonalizations).then(results => results);
+}
+
 function adaptPersonalizationToExperiments(personalizations) : ZalgoPromise<$ReadOnlyArray<Personalization>> {
     return ZalgoPromise.try(() => {
         const adaptedPersonalizations = [];
 
         Object.keys(personalizations).forEach((name) => {
-            if (personalizations[name]) {
+            // eslint-disable-next-line import/namespace
+            if (experiments[name]) {
                 const personalization = populatePersonalization({ name, personalization: personalizations[name] });
                 adaptedPersonalizations.push(personalization);
             }
