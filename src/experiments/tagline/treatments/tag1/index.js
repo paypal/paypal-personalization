@@ -12,7 +12,7 @@ export const script = () : string => {
     return `
         const taglineElement = document.querySelector('.paypal-button-tagline .paypal-button-text');
         if (taglineElement) {
-            taglineElement.innerHTML = 'tagline 1'};
+            taglineElement.innerHTML = 'tagline 1';
             
         }
     `;

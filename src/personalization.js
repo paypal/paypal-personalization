@@ -10,6 +10,9 @@ import * as experiments from './experiments';
 
 export const eligiblePersonalizations = ({ personalizations = [], props } : {| personalizations : $ReadOnlyArray<Personalization>, props : ButtonProps |}) : $ReadOnlyArray<Personalization> => {
     return personalizations.filter(personalization => {
+        if (!personalization) {
+            return false;
+        }
         // eslint-disable-next-line import/namespace
         return experiments[personalization.name].eligible({ props });
     });
