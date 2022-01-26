@@ -102,7 +102,7 @@ const PERSONALIZATION_QUERY = `
                     click
                 }
             }
-            buttonAnimation {
+            buttonDesign {
                 id
                 text
                 tracking {

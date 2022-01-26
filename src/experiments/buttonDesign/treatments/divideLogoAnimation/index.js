@@ -1,5 +1,6 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
+
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 
 // Gets and Creates necessary HTML elements for the design
@@ -25,7 +26,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         return null;
     }
 
-    const paypalLogoStartingPosition =  `${((paypalLogoElement.offsetLeft / paypalLabelContainerElement.offsetWidth) * 100)}%`;
+    const paypalLogoStartingPosition =  `${ ((paypalLogoElement.offsetLeft / paypalLabelContainerElement.offsetWidth) * 100) }%`;
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
@@ -41,7 +42,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         designContainer,
         paypalLabelContainerElement,
         paypalLogoStartingPosition
-    }
+    };
 }
 
 function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfig) {
@@ -63,11 +64,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         @keyframes divide-logo-animation-left-side {
             0% {
                 position: fixed;
-                left: ${paypalLogoStartingPosition};
+                left: ${ paypalLogoStartingPosition };
             }
             33% {
                 position: fixed;
-                left: ${paypalLogoStartingPosition};
+                left: ${ paypalLogoStartingPosition };
             }
             66% {
                 position: fixed;
@@ -83,12 +84,12 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             0%{
                 opacity: 0;
                 position: fixed;
-                right: ${paypalLogoStartingPosition};
+                right: ${ paypalLogoStartingPosition };
             }
             33%{
                 opacity: 0;
                 position: fixed;
-                right: ${paypalLogoStartingPosition};
+                right: ${ paypalLogoStartingPosition };
             }
             66% {
                 opacity: 1;
@@ -104,49 +105,49 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     `;
 
     if (paypalLabelContainerElement) {
-      const style = document.createElement('style');
-      paypalLabelContainerElement.appendChild(style);
-      style.appendChild(document.createTextNode(designCss));
+        const style = document.createElement('style');
+        paypalLabelContainerElement.appendChild(style);
+        style.appendChild(document.createTextNode(designCss));
 
       
-      window.addEventListener('resize', () => {
-          // Remove animation if size limit broken
-          if (
-              (designContainer.offsetWidth > config.max || designContainer.offsetWidth < config.min)
+        window.addEventListener('resize', () => {
+            // Remove animation if size limit broken
+            if (
+                (designContainer.offsetWidth > config.max || designContainer.offsetWidth < config.min)
               && paypalLabelContainerElement.contains(style)
-          ) {
-              paypalLabelContainerElement.removeChild(style);
-          }
-      });
+            ) {
+                paypalLabelContainerElement.removeChild(style);
+            }
+        });
     }
 }
 
 export const script = () : string => {
 
-  const config = `{
+    const config = `{
     min: 200,
     max: 750,
-    PAYPAL_LOGO:  '${LOGO_CLASS.LOGO}',
+    PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
     DOM_READY: 'dom-ready'
   }`;
 
-  return `
+    return `
     (
         function () {
-            const config = ${config};
-            const designProps = (${getDesignProps.toString()})(config)
+            const config = ${ config };
+            const designProps = (${ getDesignProps.toString() })(config)
             if (designProps) {
-                (${applyDesign.toString()})(designProps, config)
+                (${ applyDesign.toString() })(designProps, config)
             }
         }
     )()
     
   `;
 
-}
+};
 
 export const style = () : string => {
-  return `
+    return `
   .paypal-button[data-funding-source="paypal"] .dom-ready img.${ LOGO_CLASS.LOGO }{
       position: relative;
   }
@@ -164,5 +165,9 @@ export const style = () : string => {
       flex-direction: column;
       justify-content: space-around;
   }
-  `
-}
+  `;
+};
+
+export const html = () : string => {
+    return '';
+};
