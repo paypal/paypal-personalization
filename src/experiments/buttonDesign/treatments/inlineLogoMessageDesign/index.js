@@ -1,12 +1,11 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
 
-import { CLASS } from '../../../../constants';
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 
 // Gets and Creates necessary HTML elements for the design
-function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
-    const designContainer = document.querySelector(`.${ CLASS.PAYPAL_BUTTON }`);
+function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
+    const designContainer = document.querySelector('.paypal-button[data-funding-source="paypal"]');
 
     if (!designContainer) {
         return null;
@@ -17,13 +16,13 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ CLASS.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector('.paypal-button-label-container') || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ LOGO_CLASS }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -32,7 +31,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(CLASS.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add('personalized-label-container');
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Life before Death';
@@ -55,11 +54,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     } = designProps;
 
     const designCss = `
-        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ LOGO_CLASS } {
+        .dom-ready .paypal-button[data-funding-source="paypal"] img.${ config.PAYPAL_LOGO } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
-        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
+        .paypal-button[data-funding-source="paypal"] .personalized-label-container {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
         }
 
