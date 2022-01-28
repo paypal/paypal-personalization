@@ -1,13 +1,14 @@
 /* @flow */
 
 import { LOGO_CLASS } from '@paypal/sdk-logos';
+import { CLASS } from '../../../../constants';
 
 import { CLASS } from '../../../../constants';
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
-    const designContainer = document.querySelector(`.${ CLASS.PAYPAL_BUTTON }`);
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
     if (!designContainer) {
         return null;
     }
@@ -17,7 +18,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ CLASS.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
@@ -32,7 +33,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(CLASS.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Strength before Weakness';
@@ -55,11 +56,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     } = designProps;
 
     const designCss = `
-        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ LOGO_CLASS } {
+        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
             animation: 3s divide-logo-animation-left-side 1.8s infinite alternate;
         }
         
-        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
             animation: 3s divide-logo-animation-right-side 2s infinite alternate;
         }
 
