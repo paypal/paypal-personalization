@@ -1,11 +1,12 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
+import { CLASS } from '../../../../constants';
 
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
-    const designContainer = document.querySelector('.paypal-button[data-funding-source="paypal"]');
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
 
     if (!designContainer) {
         return null;
@@ -16,7 +17,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector('.paypal-button-label-container') || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
@@ -31,7 +32,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add('personalized-label-container');
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Life before Death';
@@ -54,11 +55,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     } = designProps;
 
     const designCss = `
-        .dom-ready .paypal-button[data-funding-source="paypal"] img.${ config.PAYPAL_LOGO } {
+        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
-        .paypal-button[data-funding-source="paypal"] .personalized-label-container {
+        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
         }
 
@@ -108,11 +109,14 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
 export const script = () : string => {
 
     const config = `{
-    min: 200,
-    max: 750,
-    PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
-    DOM_READY: 'dom-ready'
-  }`;
+        min: 200,
+        max: 750,
+        PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
+        DOM_READY: '${ CLASS.DOM_READY }',
+        PAYPAL_BUTTON: '${ CLASS.PAYPAL_BUTTON }',
+        LABEL_CONTAINER: '${ CLASS.LABEL_CONTAINER }',
+        PERSONALIZED_CONTAINER: '${ CLASS.PERSONALIZED_CONTAINER }'
+    }`;
 
     return `
     (
@@ -131,23 +135,23 @@ export const script = () : string => {
 
 export const style = () : string => {
     return `
-  .paypal-button[data-funding-source="paypal"] .dom-ready img.${ LOGO_CLASS.LOGO }{
-      position: relative;
-  }
+        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.DOM_READY } img.${ LOGO_CLASS.LOGO } {
+            position: relative;
+        }
 
-  .paypal-button[data-funding-source="paypal"] .personalized-label-container {
-      position: absolute;
-      opacity: 0; 
-      color: #142C8E;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 14px;
-  }
+        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
+            position: absolute;
+            opacity: 0; 
+            color: #142C8E;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+        }
 
-  .paypal-button[data-funding-source="paypal"] .personalized-label-container span {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-  }
+        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } span {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
   `;
 };
 
