@@ -1,12 +1,12 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
-import { CLASS } from '../../../../constants';
 
+import { CLASS } from '../../../../constants';
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 
 // Gets and Creates necessary HTML elements for the design
-function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
-    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
+    const designContainer = document.querySelector(`.${ CLASS.PAYPAL_BUTTON }`);
 
     if (!designContainer) {
         return null;
@@ -17,13 +17,13 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ CLASS.LABEL_CONTAINER }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ CLASS.PAYPAL_LOGO }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -32,7 +32,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(CLASS.PERSONALIZED_CONTAINER);
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Life before Death';
@@ -55,11 +55,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     } = designProps;
 
     const designCss = `
-        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
+        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ CLASS.PAYPAL_LOGO } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
-        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
+        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
         }
 
