@@ -7,6 +7,7 @@ import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
     const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+
     if (!designContainer) {
         return null;
     }
@@ -34,7 +35,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
     personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
 
     const designMessage = document.createElement('span');
-    designMessage.innerHTML = 'Strength before Weakness';
+    designMessage.innerHTML = 'Life before Death';
 
     personalizedLabelContainer.appendChild(designMessage);
     paypalLabelContainerElement.appendChild(personalizedLabelContainer);
@@ -55,25 +56,17 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
 
     const designCss = `
         .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
-            animation: 3s divide-logo-animation-left-side 1.8s infinite alternate;
+            animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
         .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
-            animation: 3s divide-logo-animation-right-side 2s infinite alternate;
+            animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
         }
 
-        @keyframes divide-logo-animation-left-side {
+        @keyframes inline-logo-message-animation-left-side {
             0% {
                 position: fixed;
                 left: ${ paypalLogoStartingPosition };
-            }
-            33% {
-                position: fixed;
-                left: ${ paypalLogoStartingPosition };
-            }
-            66% {
-                position: fixed;
-                left: 0%;
             }
             100% {
                 position: fixed;
@@ -81,21 +74,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             }
         }
         
-        @keyframes divide-logo-animation-right-side {
+        @keyframes inline-logo-message-animation-right-side {
             0%{
                 opacity: 0;
                 position: fixed;
                 right: ${ paypalLogoStartingPosition };
-            }
-            33%{
-                opacity: 0;
-                position: fixed;
-                right: ${ paypalLogoStartingPosition };
-            }
-            66% {
-                opacity: 1;
-                position: fixed;
-                right: 0%;
             }
             100% {
                 opacity: 1;

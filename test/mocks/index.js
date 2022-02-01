@@ -38,7 +38,7 @@ export function getGraphQLApiMock(options : Object = {}) : MockEndpoint {
                                 }
                             },
                             'buttonText':      null,
-                            'buttonAnimation': null
+                            'buttonDesign': null
                         }
                     }
                 };
