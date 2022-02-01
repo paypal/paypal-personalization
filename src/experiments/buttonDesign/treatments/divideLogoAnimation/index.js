@@ -23,7 +23,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ CLASS.PAYPAL_LOGO }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ LOGO_CLASS }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -55,7 +55,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     } = designProps;
 
     const designCss = `
-        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ CLASS.PAYPAL_LOGO } {
+        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ LOGO_CLASS } {
             animation: 3s divide-logo-animation-left-side 1.8s infinite alternate;
         }
         
