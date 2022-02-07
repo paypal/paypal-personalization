@@ -18,8 +18,6 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null 
     }
 
     // Compute css values
-    const borderRadius = window.getComputedStyle(designContainer).borderRadius;
-    const labelContainerMargin = window.getComputedStyle(paypalLabelContainerElement).marginRight;
     const buttonHeight = designContainer.offsetHeight;
 
     // Add necessary HTML components
@@ -27,9 +25,6 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null 
         __STYLE__.color,
         config.PAYPAL_LOGO
     );
-
-    const messageTabElement = document.createElement('div');
-    messageTabElement.classList.add('message-tab');
 
     const personalizedLabelContainer = document.createElement('div');
     personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
@@ -41,17 +36,14 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null 
 
     personalizedLabelContainer.appendChild(designMessage);
     
-    messageTabElement.appendChild(personalizedLabelContainer);
-    paypalLabelContainerElement.appendChild(messageTabElement);
+    paypalLabelContainerElement.appendChild(personalizedLabelContainer);
     paypalLabelContainerElement.appendChild(ppLogo);
     
 
     return {
         designContainer,
         paypalLabelContainerElement,
-        buttonHeight,
-        labelContainerMargin,
-        borderRadius
+        buttonHeight
     };
 }
 
@@ -59,50 +51,32 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     const {
         designContainer,
         paypalLabelContainerElement,
-        buttonHeight,
-        labelContainerMargin,
-        borderRadius
+        buttonHeight
     } = designProps;
 
-    const BACKGROUND_COLOR_MAP = {
-        blue:  '#ffc439',
-        black: '#515354'
-    };
 
-    const fontColor = __STYLE__ && __STYLE__.color === 'blue' ?  '#003087' : 'white';
-    const backgroundColor = BACKGROUND_COLOR_MAP[__STYLE__ && __STYLE__.color] || '#003087';
+    const fontColor = __STYLE__ && (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
 
     const designCss = `
-        .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO }-paypal {
+         .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO }-paypal {
             animation: 4s fade-logo-left 1s infinite alternate;
             position:fixed;
             transform:translateX(-50%);
         }
 
-        .${ config.PAYPAL_BUTTON } .message-tab {
-            width: 0%;
-            top: 0%;
-            height: ${ buttonHeight }px;
-            background-color: ${ backgroundColor };
-            transform: translateY(-25%);
-            right: -${ labelContainerMargin };
-            border-radius: ${ borderRadius };
-            animation: 4s expand-message-layer 1s infinite alternate;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
         .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
             position: fixed;
             animation: 4s show-text 1s infinite alternate;
             font-size: 4.5vw;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            width: 100%;
-            height: initial;
+            width: 90%;
+            right: 0%;
+            height: ${ buttonHeight }px;
+            transform: translateY(-50%);
             text-align: center;
             color: ${ fontColor };
         }
+
         .${ config.PAYPAL_BUTTON } .${ config.PAYPAL_LOGO }-pp{
             animation: 4s reveal-pp-logo 1s infinite alternate;
             opacity:0;
@@ -129,7 +103,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             }
         }
         @keyframes show-text {
-            0%,45%{
+            0%, 40%{
                 opacity: 0;
             }
             55%, 100% {
@@ -201,12 +175,6 @@ export const style = () : string => {
         .${ CLASS.PAYPAL_BUTTON } div.${ LOGO_CLASS.LOGO }-pp {
             position: fixed;
             opacity: 0;
-        }
-
-        .${ CLASS.PAYPAL_BUTTON } .message-tab {
-            position: fixed;
-            opacity: 0;
-            background-color: rgb(43,114,235);
         }
 
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_MESSAGE } {
