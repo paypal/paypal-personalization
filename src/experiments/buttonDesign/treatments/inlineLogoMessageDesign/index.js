@@ -1,8 +1,8 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
-import { CLASS } from '../../../../constants';
 
-import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
+import { CLASS } from '../../../../constants';
+import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
 
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
@@ -54,6 +54,8 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         paypalLogoStartingPosition
     } = designProps;
 
+    const fontColor = (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
+
     const designCss = `
         .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
@@ -61,6 +63,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         
         .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
+            color: ${ fontColor };
         }
 
         @keyframes inline-logo-message-animation-left-side {
@@ -75,10 +78,13 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         }
         
         @keyframes inline-logo-message-animation-right-side {
-            0%{
+            0% {
                 opacity: 0;
                 position: fixed;
-                right: ${ paypalLogoStartingPosition };
+                right: 45%;
+            }
+            20% {
+                opacity: 0;
             }
             100% {
                 opacity: 1;
@@ -109,7 +115,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
 export const script = () : string => {
 
     const config = `{
-        min: 200,
+        min: 300,
         max: 750,
         PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
         DOM_READY: '${ CLASS.DOM_READY }',
@@ -142,7 +148,6 @@ export const style = () : string => {
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
             position: absolute;
             opacity: 0; 
-            color: #142C8E;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px;
         }
