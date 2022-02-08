@@ -4,11 +4,13 @@
 import * as revealMessageTabAnimation from './revealMessageTabAnimation';
 import * as fadeMessageAnimation from './fadeMessageAnimation';
 import * as stackLogoMessageAnimation from './stackLogoMessageAnimation';
+import * as halfLogoMessageAnimation from './halfLogoMessageAnimation';
 
 export {
     revealMessageTabAnimation,
     fadeMessageAnimation,
-    stackLogoMessageAnimation
+    stackLogoMessageAnimation,
+    halfLogoMessageAnimation
 };
 
 /* eslint-enable import/no-namespace */
