@@ -72,7 +72,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             width: 90%;
             right: 0%;
             height: ${ buttonHeight }px;
-            transform: translateY(-50%);
+            transform: translateY(-25%);
             text-align: center;
             color: ${ fontColor };
         }
@@ -182,11 +182,16 @@ export const style = () : string => {
             white-space: break-spaces;
             padding: 5px;
             width: 100%;
+            margin: 0px;
+            height: fit-content;
         }
 
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
             opacity: 0; 
             position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
         }
 
   `;
