@@ -6,3 +6,4 @@ import * as fadeMessageAnimation from './fadeMessageAnimation';
 
 export { revealMessageTabAnimation, fadeMessageAnimation };
 
+/* eslint-enable import/no-namespace */

@@ -1,5 +1,4 @@
 /* @flow */
-
 import { LOGO_CLASS } from '@paypal/sdk-logos';
 
 import { CLASS } from '../../../../constants';
@@ -8,6 +7,7 @@ import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
     const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+    
     if (!designContainer) {
         return null;
     }
@@ -23,7 +23,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ LOGO_CLASS }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -72,7 +72,6 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
                 left: ${ paypalLogoStartingPosition };
             }
 
-            }
             66%, 100% {
                 position: fixed;
                 left: 0%;
@@ -83,7 +82,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             0%, 33%{
                 opacity: 0;
                 position: fixed;
-                right: 65%;
+                right: 40%;
             }
             66%, 100% {
                 opacity: 1;

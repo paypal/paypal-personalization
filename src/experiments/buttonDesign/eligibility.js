@@ -4,5 +4,7 @@ import type { ButtonProps } from '../../types';
 
 
 export const eligible = ({ props = {} } : {| props : ButtonProps |}) : boolean => {
-    return !props.style?.tagline || false;
+    const eligibleButtonSize = [ 'large', 'huge' ].includes(props?.buttonSize) || false;
+    const taglineDisabled = !props.style?.tagline || false;
+    return eligibleButtonSize && taglineDisabled;
 };

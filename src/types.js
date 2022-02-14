@@ -59,7 +59,8 @@ export type Treatments = {|
 export type ButtonProps = {|
     style : {|
         tagline : boolean
-    |}
+    |},
+    buttonSize? : string
 |};
 
 export type ButtonDesignConfig = {|
