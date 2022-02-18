@@ -1,6 +1,6 @@
 /* @flow */
 
-import { getActualDomain } from 'cross-domain-utils/src';
+import { getActualDomain } from '@krakenjs/cross-domain-utils/src';
 
 import { URI } from './config';
 
