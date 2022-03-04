@@ -4,6 +4,10 @@ import { INTENT } from '@paypal/sdk-constants/src';
 import { patchXmlHttpRequest } from 'sync-browser-mocks/dist/sync-browser-mocks';
 
 import { fetchPersonalizations } from '../src';
+import { EXPERIMENTS } from '../src/constants';
+import { TAGLINES } from '../src/experiments/tagline/mapping/taglines';
+import { getTaglineContent } from '../src/experiments/tagline/mapping';
+
 
 import { getGraphQLApiMock } from './mocks';
 
@@ -61,5 +65,65 @@ describe(`personalization cases`, () => {
                 }
             });
 
+    });
+});
+
+describe('method to return the correct tagline translation according to the mapping id', () => {
+    it('should return the french translation for Pay now or pay later', () => {
+        const mlModelReturn = {
+            locale:              'fr_FR',
+            taglinesPredictions: [
+                {
+                    tagline:    'buy_now_pay_later',
+                    score:      0.5106762924323349
+                },
+                {
+                    tagline:    'pay_now_pay_later',
+                    score:      0.550356122821681
+                },
+                {
+                    tagline:    'safe_easy_way',
+                    score:      0.5048634661983218
+                },
+                {
+                    tagline:    'shop_now_pay_over_time',
+                    score:      0.5073325073436752
+                }
+            ]
+        };
+
+        const tagline = getTaglineContent({ ...mlModelReturn, experimentName: EXPERIMENTS.SINGLE_BUTTON });
+        if (tagline !== TAGLINES.pay_now_pay_later.fr_FR) {
+            throw new Error(`Expected '${ TAGLINES.pay_now_pay_later.fr_FR }' tagline to be returned.`);
+        }
+    });
+
+    it('should return the default translation (en_US) for Pay now or pay later if there is no translation', () => {
+        const mlModelReturn = {
+            locale:              'pt_BR',
+            taglinesPredictions: [
+                {
+                    tagline:    'buy_now_pay_later',
+                    score:      0.5106762924323349
+                },
+                {
+                    tagline:    'pay_now_pay_later',
+                    score:      0.550356122821681
+                },
+                {
+                    tagline:    'safe_easy_way',
+                    score:      0.5048634661983218
+                },
+                {
+                    tagline:    'shop_now_pay_over_time',
+                    score:      0.5073325073436752
+                }
+            ]
+        };
+
+        const tagline = getTaglineContent({ ...mlModelReturn, experimentName: EXPERIMENTS.SINGLE_BUTTON });
+        if (tagline !== TAGLINES.pay_now_pay_later.en_US) {
+            throw new Error(`Expected '${ TAGLINES.pay_now_pay_later.en_US }' tagline to be returned.`);
+        }
     });
 });
