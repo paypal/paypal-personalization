@@ -61,3 +61,14 @@ export type ButtonProps = {|
         tagline : boolean
     |}
 |};
+
+type taglinePrediction = {|
+    tagline : string,
+    score : number
+|};
+
+export type getTaglineContentProps = {|
+    locale? : string,
+    taglinesPredictions : $ReadOnlyArray<taglinePrediction>,
+    experimentName? : string
+|};
