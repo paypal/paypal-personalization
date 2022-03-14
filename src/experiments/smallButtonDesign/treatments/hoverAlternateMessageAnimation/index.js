@@ -2,16 +2,18 @@
 import { LOGO_CLASS, LOGO_COLOR } from '@paypal/sdk-logos';
 
 import { CLASS } from '../../../../constants';
-import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
+import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
+
+declare var __STYLE__;
 
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null {
-    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON || '' }`);
     if (!designContainer) {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER || '' }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
@@ -22,10 +24,10 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null 
     // Add necessary HTML components
 
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER || '');
 
     const designMessage = document.createElement('p');
-    designMessage.classList.add(config.PERSONALIZED_MESSAGE);
+    designMessage.classList.add(config.PERSONALIZED_MESSAGE || '');
     designMessage.innerHTML = 'A safer easier way to pay';
     // designMessage.innerHTML = 'Life before Death, Strength before Weakness';
 
@@ -52,14 +54,14 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     const fontColor = __STYLE__ && (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
 
     const designCss = `
-        .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO }-paypal {
+        .${ config.PAYPAL_BUTTON || '' } img.${ config.PAYPAL_LOGO || '' }-paypal {
             position:fixed;
             transform: translateX(-50%);
             opacity:1;
             transition: transform .75s, opacity .75s;
         }
 
-        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON || '' } .${ config.PERSONALIZED_CONTAINER || '' } {
             position: fixed;
             opacity: 0;
             transform: translate(75%, -25%);
@@ -67,18 +69,18 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             width: 100%;
             right: 0%;
-            height: ${ buttonHeight }px;
+            height: ${ buttonHeight || '' }px;
             text-align: center;
             color: ${ fontColor };
             transition: transform .75s, opacity .75s;
         }
 
-        .${ config.PAYPAL_BUTTON }:hover .${ config.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON || '' }:hover .${ config.PERSONALIZED_CONTAINER || '' } {
             opacity: 1;
             transform: translate(0%, -25%);   
         }
 
-        .${ config.PAYPAL_BUTTON }:hover img.${ config.PAYPAL_LOGO }-paypal {
+        .${ config.PAYPAL_BUTTON || '' }:hover img.${ config.PAYPAL_LOGO || '' }-paypal {
             transform: translateX(-200%);
             opacity:0;
         }
@@ -140,7 +142,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         window.addEventListener('resize', () => {
             // Remove animation if size limit broken
             if (
-                (designContainer.offsetWidth > config.max || designContainer.offsetWidth < config.min)
+                ((designContainer && designContainer.offsetWidth > config.max) || (designContainer && designContainer.offsetWidth < config.min))
               && paypalLabelContainerElement.contains(style)
             ) {
                 paypalLabelContainerElement.removeChild(style);
