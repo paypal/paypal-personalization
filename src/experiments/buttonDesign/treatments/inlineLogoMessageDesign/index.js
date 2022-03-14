@@ -2,11 +2,11 @@
 import { LOGO_CLASS } from '@paypal/sdk-logos';
 
 import { CLASS } from '../../../../constants';
-import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
+import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
 
 // Gets and Creates necessary HTML elements for the design
-function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
-    const designContainer = document.querySelector(`.${ CLASS.PAYPAL_BUTTON }`);
+function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
 
     if (!designContainer) {
         return null;
@@ -17,13 +17,13 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ CLASS.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ LOGO_CLASS }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -32,7 +32,7 @@ function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(CLASS.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Life before Death';
@@ -54,13 +54,16 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         paypalLogoStartingPosition
     } = designProps;
 
+    const fontColor = (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
+
     const designCss = `
-        .${ CLASS.DOM_READY } .${ CLASS.PAYPAL_BUTTON } img.${ LOGO_CLASS } {
+        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
-        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
+            color: ${ fontColor };
         }
 
         @keyframes inline-logo-message-animation-left-side {
@@ -75,10 +78,13 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         }
         
         @keyframes inline-logo-message-animation-right-side {
-            0%{
+            0% {
                 opacity: 0;
                 position: fixed;
-                right: ${ paypalLogoStartingPosition };
+                right: 45%;
+            }
+            20% {
+                opacity: 0;
             }
             100% {
                 opacity: 1;
@@ -109,7 +115,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
 export const script = () : string => {
 
     const config = `{
-        min: 200,
+        min: 300,
         max: 750,
         PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
         DOM_READY: '${ CLASS.DOM_READY }',
@@ -142,7 +148,6 @@ export const style = () : string => {
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
             position: absolute;
             opacity: 0; 
-            color: #142C8E;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px;
         }
