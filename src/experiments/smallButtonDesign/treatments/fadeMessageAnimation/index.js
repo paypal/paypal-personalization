@@ -72,7 +72,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
             width: 90%;
             right: 0%;
             height: ${ buttonHeight }px;
-            transform: translateY(-25%);
+            transform: translateY(-50%);
             text-align: center;
             color: ${ fontColor };
         }
