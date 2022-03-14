@@ -1,7 +1,7 @@
 /* @flow */
 
-import type { ButtonProps } from '../../types';
+import type { ButtonProps, Eligibility } from 'src/types';
 
-export const eligible = ({ props = {} } : {| props : ButtonProps |}) : boolean => {
+export const eligible : Eligibility = ({ props = {} } : {| props : ButtonProps |}) : boolean => {
     return props.style?.tagline || false;
 };

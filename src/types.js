@@ -61,3 +61,17 @@ export type ButtonProps = {|
         tagline : boolean
     |}
 |};
+
+export type PersonalizationResponse = {|
+    text : string,
+    tracking : {|
+        impression : string,
+        click : string
+    |}
+|};
+
+export type Eligibility = ({| props : ButtonProps |}) => boolean;
+
+export type Html = ({| personalization? : ?PersonalizationResponse |}) => string;
+export type Style = ({| personalization? : ?PersonalizationResponse |}) => string;
+export type Script = ({| personalization? : ?PersonalizationResponse |}) => string;

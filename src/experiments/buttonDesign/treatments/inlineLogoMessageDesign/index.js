@@ -1,5 +1,6 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
+import type { Html, Style, Script } from 'src/types';
 
 import { CLASS } from '../../../../constants';
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
@@ -106,7 +107,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     }
 }
 
-export const script = () : string => {
+export const script : Script = () => {
 
     const config = `{
         min: 200,
@@ -133,7 +134,7 @@ export const script = () : string => {
 
 };
 
-export const style = () : string => {
+export const style : Style = () => {
     return `
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.DOM_READY } img.${ LOGO_CLASS.LOGO } {
             position: relative;
@@ -155,6 +156,6 @@ export const style = () : string => {
   `;
 };
 
-export const html = () : string => {
+export const html : Html = () => {
     return '';
 };
