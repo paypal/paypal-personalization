@@ -182,11 +182,16 @@ export const style = () : string => {
             white-space: break-spaces;
             padding: 5px;
             width: 100%;
+            margin: 0px;
+            height: fit-content;
         }
 
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
             opacity: 0; 
             position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
         }
 
   `;
