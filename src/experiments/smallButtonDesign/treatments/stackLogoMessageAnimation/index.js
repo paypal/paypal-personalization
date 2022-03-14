@@ -1,20 +1,13 @@
 /* @flow */
-import { LOGO_CLASS } from '@paypal/sdk-logos';
-import type { Html, Style, Script } from 'src/types';
+import { LOGO_CLASS, LOGO_COLOR } from '@paypal/sdk-logos';
 
 import { CLASS } from '../../../../constants';
 import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
 
 // Gets and Creates necessary HTML elements for the design
-function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
+function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null {
     const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
-
     if (!designContainer) {
-        return null;
-    }
-
-    const designContainerWidth = designContainer.offsetWidth;
-    if (designContainerWidth < config.min || designContainerWidth > config.max) {
         return null;
     }
 
@@ -23,20 +16,16 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         return null;
     }
 
-    // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
-    if (!paypalLogoElement) {
-        return null;
-    }
+    // Compute css values
+    const containerHeight = paypalLabelContainerElement.offsetHeight;
 
-    const paypalLogoStartingPosition =  `${ ((paypalLogoElement.offsetLeft / paypalLabelContainerElement.offsetWidth) * 100) }%`;
-
-    // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
     personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
 
-    const designMessage = document.createElement('span');
-    designMessage.innerHTML = 'Life before Death';
+    const designMessage = document.createElement('p');
+    designMessage.classList.add(config.PERSONALIZED_MESSAGE);
+    // designMessage.innerHTML = 'A safer easier way to pay';
+    designMessage.innerHTML = 'Journey before destination';
 
     personalizedLabelContainer.appendChild(designMessage);
     paypalLabelContainerElement.appendChild(personalizedLabelContainer);
@@ -44,7 +33,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
     return {
         designContainer,
         paypalLabelContainerElement,
-        paypalLogoStartingPosition
+        containerHeight
     };
 }
 
@@ -52,48 +41,49 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     const {
         designContainer,
         paypalLabelContainerElement,
-        paypalLogoStartingPosition
+        containerHeight
     } = designProps;
 
-    const fontColor = (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
+    const fontColor = __STYLE__ && (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
 
     const designCss = `
-        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
-            animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
+        .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO }-paypal {
+            animation: 4s slide-logo-up 1s infinite alternate;
+            position:fixed;
+            transform:translateX(-50%);
         }
-        
+
         .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
-            animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
+            position: fixed;
+            animation: 4s show-text 1s infinite alternate;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            height: ${ containerHeight }px;
+            text-align: center;
             color: ${ fontColor };
         }
 
-        @keyframes inline-logo-message-animation-left-side {
-            0% {
-                position: fixed;
-                left: ${ paypalLogoStartingPosition };
+        @keyframes slide-logo-up {
+            0%,33% {
+                transform: translate(-50%, 0%);
             }
-            100% {
-                position: fixed;
-                left: 0%;
-            }
-        }
-        
-        @keyframes inline-logo-message-animation-right-side {
-            0% {
-                opacity: 0;
-                position: fixed;
-                right: 45%;
-            }
-            20% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-                position: fixed;
-                right: 0%;
+            50%,100% {
+                position:fixed;
+                transform: translate(-50%, -30%);
             }
         }
+
+        @keyframes show-text {
+            0%,33%{
+                opacity: 0;
+            }
+            55%, 100% {
+                opacity: 1;                    
+            }
+        }
+
     `;
+
 
     if (paypalLabelContainerElement) {
         const style = document.createElement('style');
@@ -113,16 +103,18 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     }
 }
 
-export const script : Script = () => {
+export const script = () : string => {
 
     const config = `{
-        min: 300,
-        max: 750,
+        min: 150,
+        max: 300,
         PAYPAL_LOGO:  '${ LOGO_CLASS.LOGO }',
+        LOGO_COLOR: '${ LOGO_COLOR }',
         DOM_READY: '${ CLASS.DOM_READY }',
         PAYPAL_BUTTON: '${ CLASS.PAYPAL_BUTTON }',
         LABEL_CONTAINER: '${ CLASS.LABEL_CONTAINER }',
-        PERSONALIZED_CONTAINER: '${ CLASS.PERSONALIZED_CONTAINER }'
+        PERSONALIZED_CONTAINER: '${ CLASS.PERSONALIZED_CONTAINER }',
+        PERSONALIZED_MESSAGE: '${ CLASS.PERSONALIZED_MESSAGE }'
     }`;
 
     return `
@@ -140,27 +132,24 @@ export const script : Script = () => {
 
 };
 
-export const style : Style = () => {
+export const style = () : string => {
     return `
-        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.DOM_READY } img.${ LOGO_CLASS.LOGO } {
-            position: relative;
+
+        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_MESSAGE } {
+            text-align: center;
+            width: 100%;
+            font-size: 4.3vw;
+            transform: translateY(19%);
         }
 
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } {
-            position: absolute;
             opacity: 0; 
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 14px;
+            position: fixed;
         }
 
-        .${ CLASS.PAYPAL_BUTTON } .${ CLASS.PERSONALIZED_CONTAINER } span {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
   `;
 };
 
-export const html : Html = () => {
+export const html = () : string => {
     return '';
 };
