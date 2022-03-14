@@ -1,12 +1,15 @@
 /* @flow */
 import { LOGO_CLASS } from '@paypal/sdk-logos';
+import type { Html, Style, Script } from 'src/types';
 
 import { CLASS } from '../../../../constants';
-import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
+import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
+
+declare var __STYLE__;
 
 // Gets and Creates necessary HTML elements for the design
-function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
-    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+function getDesignProps(config : ButtonDesignConfig) : ?ButtonDesignProps {
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON || '' }`);
 
     if (!designContainer) {
         return null;
@@ -17,13 +20,13 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER || '' }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
 
     // get starting position for element so it doesn't flicker when animation begins
-    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO }`)) || null;
+    const paypalLogoElement = (paypalLabelContainerElement && paypalLabelContainerElement.querySelector(`.${ config.PAYPAL_LOGO || '' }`)) || null;
     if (!paypalLogoElement) {
         return null;
     }
@@ -32,7 +35,7 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps {
 
     // create personalized label container
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER || '');
 
     const designMessage = document.createElement('span');
     designMessage.innerHTML = 'Life before Death';
@@ -57,11 +60,11 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     const fontColor = (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
 
     const designCss = `
-        .${ config.DOM_READY } .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO } {
+        .${ config.DOM_READY || '' } .${ config.PAYPAL_BUTTON || '' } img.${ config.PAYPAL_LOGO || '' } {
             animation: inline-logo-message-animation-left-side 1.2s 1.8s 1 forwards;
         }
         
-        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON || '' } .${ config.PERSONALIZED_CONTAINER || '' } {
             animation: inline-logo-message-animation-right-side 1.2s 1.8s 1 forwards;
             color: ${ fontColor };
         }
@@ -69,7 +72,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         @keyframes inline-logo-message-animation-left-side {
             0% {
                 position: fixed;
-                left: ${ paypalLogoStartingPosition };
+                left: ${ paypalLogoStartingPosition || '' };
             }
             100% {
                 position: fixed;
@@ -103,7 +106,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         window.addEventListener('resize', () => {
             // Remove animation if size limit broken
             if (
-                (designContainer.offsetWidth > config.max || designContainer.offsetWidth < config.min)
+                ((designContainer && designContainer.offsetWidth > config.max) || (designContainer && designContainer.offsetWidth < config.min))
               && paypalLabelContainerElement.contains(style)
             ) {
                 paypalLabelContainerElement.removeChild(style);
@@ -112,7 +115,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     }
 }
 
-export const script = () : string => {
+export const script : Script = () => {
 
     const config = `{
         min: 300,
@@ -139,7 +142,7 @@ export const script = () : string => {
 
 };
 
-export const style = () : string => {
+export const style : Style = () => {
     return `
         .${ CLASS.PAYPAL_BUTTON } .${ CLASS.DOM_READY } img.${ LOGO_CLASS.LOGO } {
             position: relative;
@@ -160,6 +163,6 @@ export const style = () : string => {
   `;
 };
 
-export const html = () : string => {
+export const html : Html = () => {
     return '';
 };

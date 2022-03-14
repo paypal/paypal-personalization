@@ -9,17 +9,39 @@ Experiment definitions are added under the `experiments` folder.  The folder nam
 Create a `treatments` folder within each personalization definition with as many treatments as are defined by the experiment.  For each treatment, create a folder with it's treatment name as will be defined in the response.
 
 #### HTML
+``` javascript
+type Html = ({| personalization? : ?PersonalizationResponse |}) => string;
+```
 Define the HTML to be injected into the DOM for the experiment in a file named, `html.js` under the root folder of the defined experiment. Export a function named `html`.
 
 #### CSS
+``` javascript
+type Style = ({| personalization? : ?PersonalizationResponse |}) => string;
+```
 Define the CSS to be injected into the `<style>` for the experiment in a file named, `style.js` under the root folder of the defined experiment.  Export a function named `style`.
 
 #### JS
+``` javascript
+type Script = ({| personalization? : ?PersonalizationResponse |}) => string;
+```
 Define the JS to be injected into the `<script>` for the experiment in a file named, `script.js` under the root folder of the defined experiment.  Export a function named `script`.
 
 #### Eligibility
-Define the client-side eligibility requirements for the experiment in a file named, `eligibility.js` under the root folder of the defined experiment.  Export a function named `eligible`.  This function takes in the allowable `ButtonProps` defined in `types.js`.  Add to this as needed if new experiments require other button props to be passed in.
+``` javascript
+type Eligibility = ({| props : ButtonProps |}) => boolean;
+```
+Define the client-side eligibility requirements for the experiment in a file named, `eligibility.js` under the root folder of the defined experiment.  Export a function named `isEligible`.  This function takes in the allowable `ButtonProps` defined in `types.js`.  Add to this as needed if new experiments require other button props to be passed in.
 
+#### PersonalizationResponse
+``` javascript
+type PersonalizationResponse = {|
+    text : string,
+    tracking : {|
+        impression : string,
+        click : string
+    |}
+|};
+```
 **In-progress**
 > For experiments that do not personalize the user experience, such as ramping scenarios, you would set eligibility requirements in the `eligibility.js` file.
 

@@ -2,16 +2,18 @@
 import { LOGO_CLASS, LOGO_COLOR } from '@paypal/sdk-logos';
 
 import { CLASS } from '../../../../constants';
-import type { ButtonDesignConfig, ButtonDesignProps } from '../../../../types';
+import type { ButtonDesignConfig, ButtonDesignProps } from '../../types';
+
+declare var __STYLE__;
 
 // Gets and Creates necessary HTML elements for the design
 function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null {
-    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON }`);
+    const designContainer = document.querySelector(`.${ config.PAYPAL_BUTTON || '' }`);
     if (!designContainer) {
         return null;
     }
 
-    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER }`) || null;
+    const paypalLabelContainerElement = designContainer.querySelector(`.${ config.LABEL_CONTAINER || '' }`) || null;
     if (!paypalLabelContainerElement) {
         return null;
     }
@@ -20,10 +22,10 @@ function getDesignProps(config : ButtonDesignConfig) : ButtonDesignProps | null 
     const containerHeight = paypalLabelContainerElement.offsetHeight;
 
     const personalizedLabelContainer = document.createElement('div');
-    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER);
+    personalizedLabelContainer.classList.add(config.PERSONALIZED_CONTAINER || '');
 
     const designMessage = document.createElement('p');
-    designMessage.classList.add(config.PERSONALIZED_MESSAGE);
+    designMessage.classList.add(config.PERSONALIZED_MESSAGE || '');
     // designMessage.innerHTML = 'A safer easier way to pay';
     designMessage.innerHTML = 'Journey before destination';
 
@@ -47,18 +49,18 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
     const fontColor = __STYLE__ && (__STYLE__.color === 'blue' || __STYLE__.color === 'black') ? 'white' : '#003087';
 
     const designCss = `
-        .${ config.PAYPAL_BUTTON } img.${ config.PAYPAL_LOGO }-paypal {
+        .${ config.PAYPAL_BUTTON || '' } img.${ config.PAYPAL_LOGO || '' }-paypal {
             animation: 4s slide-logo-up 1s infinite alternate;
             position:fixed;
             transform:translateX(-50%);
         }
 
-        .${ config.PAYPAL_BUTTON } .${ config.PERSONALIZED_CONTAINER } {
+        .${ config.PAYPAL_BUTTON || '' } .${ config.PERSONALIZED_CONTAINER || '' } {
             position: fixed;
             animation: 4s show-text 1s infinite alternate;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             width: 100%;
-            height: ${ containerHeight }px;
+            height: ${ containerHeight || '' }px;
             text-align: center;
             color: ${ fontColor };
         }
@@ -94,7 +96,7 @@ function applyDesign(designProps : ButtonDesignProps, config : ButtonDesignConfi
         window.addEventListener('resize', () => {
             // Remove animation if size limit broken
             if (
-                (designContainer.offsetWidth > config.max || designContainer.offsetWidth < config.min)
+                ((designContainer && designContainer.offsetWidth > config.max) || (designContainer && designContainer.offsetWidth < config.min))
               && paypalLabelContainerElement.contains(style)
             ) {
                 paypalLabelContainerElement.removeChild(style);

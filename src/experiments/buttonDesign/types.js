@@ -1,4 +1,5 @@
 /* @flow */
+
 export type ButtonDesignConfig = {|
   min : number,
   max : number,
@@ -17,6 +18,5 @@ export type ButtonDesignProps = {|
   paypalLogoStartingPosition? : string,
   buttonHeight? : number,
   labelContainerMargin? : string,
-  borderRadius? : string,
-  containerHeight? : number
+  borderRadius? : string
 |};

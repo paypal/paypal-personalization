@@ -7,7 +7,7 @@ import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { URI } from './config';
 import { buildPayPalUrl } from './domains';
 import { getLogger } from './logger';
-import type { MLContext, Personalization, Extra, Tracking, Treatments, UserContext } from './types';
+import type { MLContext, Personalization, PersonalizationResponse, Extra, Tracking, Treatments, UserContext } from './types';
 // eslint-disable-next-line import/no-namespace
 import * as experiments from './experiments';
 import { TrackingBeacon, TrackingStyle } from './components';
@@ -114,22 +114,31 @@ const PERSONALIZATION_QUERY = `
     }
 `;
 
+/**
+ * Future method when treatments are defined in experiment
+ */
 function getHTML({ name, tracking, treatment } : {| name : string, tracking : Tracking, treatment : string |}) : string {
     // eslint-disable-next-line import/namespace
     return TrackingBeacon({ url: tracking.treatment }) + (experiments[name]?.treatments?.[treatment]?.html() || '');
 }
 
+/**
+ * Future method when treatments are defined in experiment
+ */
 function getStyle({ name, treatment } : {| name : string, treatment : string |}) : string {
     // eslint-disable-next-line import/namespace
     return TrackingStyle() + (experiments[name]?.treatments?.[treatment]?.style() || '');
 }
 
+/**
+ * Future method when treatments are defined in experiment
+ */
 function getScript({ name, treatment } : {| name : string, treatment : string |}) : string {
     // eslint-disable-next-line import/namespace
     return experiments[name]?.treatments?.[treatment]?.script() || '';
 }
 
-function getHTMLForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
+function getHTMLForPersonalization({ name, personalization } : {| name : string, personalization : PersonalizationResponse |}) : string {
     let trackingBeacon = '';
     if (personalization?.tracking?.impression) {
         trackingBeacon = TrackingBeacon({ url: personalization.tracking.impression });
@@ -138,7 +147,7 @@ function getHTMLForPersonalization({ name, personalization } : {| name : string,
     return trackingBeacon + (experiments[name]?.html({ personalization }) || '');
 }
 
-function getStyleForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
+function getStyleForPersonalization({ name, personalization } : {| name : string, personalization : PersonalizationResponse |}) : string {
     let trackingStyle = '';
     if (personalization?.tracking?.impression) {
         trackingStyle = TrackingStyle();
@@ -147,7 +156,7 @@ function getStyleForPersonalization({ name, personalization } : {| name : string
     return trackingStyle + (experiments[name]?.style({ personalization }) || '');
 }
 
-function getScriptForPersonalization({ name, personalization } : {| name : string, personalization : {| text : string, tracking : {| impression : string, click : string |} |} |}) : string {
+function getScriptForPersonalization({ name, personalization } : {| name : string, personalization : PersonalizationResponse |}) : string {
     // eslint-disable-next-line import/namespace
     return experiments[name]?.script({ personalization }) || '';
 }

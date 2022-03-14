@@ -1,5 +1,7 @@
 /* @flow */
 
-export const html = () : string => {
+import type { Html } from 'src/types';
+
+export const html : Html = () => {
     return '';
 };
