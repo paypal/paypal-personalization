@@ -18,7 +18,7 @@ Define the CSS to be injected into the `<style>` for the experiment in a file na
 Define the JS to be injected into the `<script>` for the experiment in a file named, `script.js` under the root folder of the defined experiment.  Export a function named `script`.
 
 #### Eligibility
-Define the client-side eligibility requirements for the experiment in a file named, `eligibility.js` under the root folder of the defined experiment.  Export a function named `isEligible`.  This function takes in the allowable `ButtonProps` defined in `types.js`.  Add to this as needed if new experiments require other button props to be passed in.
+Define the client-side eligibility requirements for the experiment in a file named, `eligibility.js` under the root folder of the defined experiment.  Export a function named `eligible`.  This function takes in the allowable `ButtonProps` defined in `types.js`.  Add to this as needed if new experiments require other button props to be passed in.
 
 **In-progress**
 > For experiments that do not personalize the user experience, such as ramping scenarios, you would set eligibility requirements in the `eligibility.js` file.
