@@ -1,7 +1,7 @@
 /* @flow */
 /* @jsx node */
 
-import { html, node } from 'jsx-pragmatic/src';
+import { html, node } from '@krakenjs/jsx-pragmatic/src';
 
 export function TrackingStyle() : string {
     return `

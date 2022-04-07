@@ -1,7 +1,7 @@
 /* @flow */
 
-import { ZalgoPromise } from 'zalgo-promise/src';
-import { request, stringifyError } from 'belter/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { request, stringifyError } from '@krakenjs/belter/src';
 import { type FundingEligibilityType } from '@paypal/sdk-constants/src';
 
 import { URI } from './config';
