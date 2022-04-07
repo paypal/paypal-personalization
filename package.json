@@ -29,13 +29,14 @@
   "author": "Steve Mask",
   "license": "Apache-2.0",
   "dependencies": {
+    "@krakenjs/beaver-logger": "^5.0.0",
+    "@krakenjs/belter": "^2.0.0",
+    "@krakenjs/cross-domain-utils": "^3.0.0",
+    "@krakenjs/jsx-pragmatic": "^3.0.0",
+    "@krakenjs/zalgo-promise": "^2.0.0",
     "@paypal/sdk-constants": "^1.0.113",
-    "beaver-logger": "^4.0.32",
-    "belter": "^1.0.146",
-    "bowser": "^2.0.0",
-    "cross-domain-utils": "^2.0.38",
-    "jsx-pragmatic": "^2.0.22",
-    "zalgo-promise": "^1.0.48"
+    "@paypal/sdk-logos": "^1.0.45",
+    "bowser": "^2.0.0"
   },
   "devDependencies": {
     "babel-core": "7.0.0-bridge.0",

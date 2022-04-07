@@ -1,6 +1,6 @@
 /* @flow */
 
-import { noop } from 'belter/src';
+import { noop } from '@krakenjs/belter/src';
 
 function clearErrorListener() {
     // eslint-disable-next-line unicorn/prefer-add-event-listener
