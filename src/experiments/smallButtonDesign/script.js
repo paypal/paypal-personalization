@@ -1,7 +1,7 @@
 /* @flow */
 
-import { script as getScript } from './treatments/revealMessageTabAnimation';
+import { script as getScript } from "./treatments/revealMessageTabAnimation";
 
-export const script = () : string => {
-    return getScript();
+export const script = (): string => {
+  return getScript();
 };
