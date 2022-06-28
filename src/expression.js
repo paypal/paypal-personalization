@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { UserContext } from './types';
+import type { UserContext } from "./types";
 
 /**
  *  Expression language for determining decision for personalization based on user context
@@ -36,66 +36,78 @@ import type { UserContext } from './types';
 
 // Logical Operators
 const and = (params) => {
-    return params.reduce((acc, val) => acc && val, true);
+  return params.reduce((acc, val) => acc && val, true);
 };
 const or = (params) => {
-    return params.reduce((acc, val) => acc || val, true);
+  return params.reduce((acc, val) => acc || val, true);
 };
 const not = (x) => {
-    return !x;
+  return !x;
 };
 
 // Mathmetical Operators
 const add = (params) => {
-    return params.reduce((acc, val) => acc + val, 0);
+  return params.reduce((acc, val) => acc + val, 0);
 };
 const multiply = (params) => {
-    return params.reduce((acc, val) => acc * val, 1);
+  return params.reduce((acc, val) => acc * val, 1);
 };
 const eq = (params) => {
-    const [ firstParam, ...restParams ] = params;
-    return restParams.reduce((acc, val) => acc === val, firstParam);
+  const [firstParam, ...restParams] = params;
+  return restParams.reduce((acc, val) => acc === val, firstParam);
 };
 
-export const processExpression = ({ context, expression } : {| context : UserContext, expression : string |}) : boolean => {
-    if (context) {
-        Object.keys(context).forEach(key => {
-            expression.replace(key, context[key]);
-        });
-    }
-    const parsedExpression = JSON.parse(expression);
+export const processExpression = ({
+  context,
+  expression,
+}: {|
+  context: UserContext,
+  expression: string,
+|}): boolean => {
+  if (context) {
+    Object.keys(context).forEach((key) => {
+      expression.replace(key, context[key]);
+    });
+  }
+  const parsedExpression = JSON.parse(expression);
 
-    const [ operand, ...params ] = parsedExpression;
-    
-    const complexExpression = params.reduce((acc, val) => acc || Array.isArray(val), false);
-    if (complexExpression) {
-        const reducedExpression = parsedExpression.map(val => {
-            if (Array.isArray(val)) {
-                return processExpression({ context, expression: JSON.stringify(val) });
-            }
+  const [operand, ...params] = parsedExpression;
 
-            return val;
-        });
+  const complexExpression = params.reduce(
+    (acc, val) => acc || Array.isArray(val),
+    false
+  );
+  if (complexExpression) {
+    const reducedExpression = parsedExpression.map((val) => {
+      if (Array.isArray(val)) {
+        return processExpression({ context, expression: JSON.stringify(val) });
+      }
 
-        return processExpression({ context, expression: JSON.stringify(reducedExpression) });
-    }
-    
-    switch (operand) {
-    case 'AND':
-        return and(params);
-    case 'OR':
-        return or(params);
-    case 'NOT':
-        return not(params);
-    case 'TRUE':
-        return true;
-    case 'ADD':
-        return add(params);
-    case 'MULT':
-        return multiply(params);
-    case 'EQ':
-        return eq(params);
+      return val;
+    });
+
+    return processExpression({
+      context,
+      expression: JSON.stringify(reducedExpression),
+    });
+  }
+
+  switch (operand) {
+    case "AND":
+      return and(params);
+    case "OR":
+      return or(params);
+    case "NOT":
+      return not(params);
+    case "TRUE":
+      return true;
+    case "ADD":
+      return add(params);
+    case "MULT":
+      return multiply(params);
+    case "EQ":
+      return eq(params);
     default:
-        throw new Error(`Invalid operand ${ operand }`);
-    }
+      throw new Error(`Invalid operand ${operand}`);
+  }
 };

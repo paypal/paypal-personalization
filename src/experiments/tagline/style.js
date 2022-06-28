@@ -1,7 +1,7 @@
 /* @flow */
 
-import type { Style } from 'src/types';
+import type { Style } from "src/types";
 
-export const style : Style = () => {
-    return '';
+export const style: Style = () => {
+  return "";
 };

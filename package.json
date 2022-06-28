@@ -19,9 +19,12 @@
     "release:minor": "./publish.sh minor",
     "release:patch": "./publish.sh patch",
     "setup": "npm install && npm run flow-typed",
-    "test": "npm run lint && npm run flow-typed && npm run flow && npm run karma",
+    "format": "prettier --write --ignore-unknown .",
+    "format:check": "prettier --check .",
+    "test": "npm run format:check && npm run lint && npm run flow-typed && npm run flow && npm run karma",
     "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
-    "prepublishOnly": "npm run babel"
+    "prepublishOnly": "npm run babel",
+    "prepare": "husky install"
   },
   "keywords": [
     "personalization"
@@ -30,6 +33,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@paypal/sdk-constants": "^1.0.113",
+    "@paypal/sdk-logos": "^1.0.46",
     "beaver-logger": "^4.0.32",
     "belter": "^1.0.146",
     "bowser": "^2.0.0",
@@ -38,13 +42,19 @@
     "zalgo-promise": "^1.0.48"
   },
   "devDependencies": {
+    "@krakenjs/grumbler-scripts": "^7.0.2",
     "babel-core": "7.0.0-bridge.0",
     "esdoc": "1.1.0",
     "esdoc-flow-type-plugin": "1.1.0",
     "esdoc-standard-plugin": "1.0.0",
     "flow-bin": "0.155.0",
-    "grumbler-scripts": "^5.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "mocha": "4.1.0",
+    "prettier": "2.7.1",
     "sync-browser-mocks": "2.0.8"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

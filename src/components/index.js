@@ -1,4 +1,4 @@
 /* @flow */
 
-export * from './tracking';
-export * from './logo';
+export * from "./tracking";
+export * from "./logo";

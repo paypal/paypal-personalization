@@ -1,4 +1,4 @@
 /* @flow */
 
-import './common';
-import './personalization';
+import "./common";
+import "./personalization";
